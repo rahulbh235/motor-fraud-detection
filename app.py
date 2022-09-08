@@ -1,3 +1,4 @@
+import json
 from flask import Flask, jsonify, request
 app = Flask(__name__);
 import base64
@@ -5,6 +6,7 @@ import pytesseract as tess
 from PIL import Image
 import cv2
 import numpy as np
+import urllib.request
 #myconfig = r'--psm 11 --oem 3'
 
 
@@ -117,6 +119,18 @@ def home():
         fuel = getFuelType(text)
         osNo = getSNo(text)
         model = getModel(text)
+        
+        print(text)       
+        url = 'https://brokeragemasterstaging.insurancedekho.com/api/v1/master/mmv-mapping?vehicleType=fw_mmv&data={0}'.format(model)
+        print('URl',url)
+        url= url.replace(" ","%20")
+        # result = urllib.request.urlopen(url)
+        # print('--------------',result);
+        result = ''
+        with urllib.request.urlopen(url) as response:
+            result = response.read()
+            result2 = json.loads(result)
+        print('Result',type(result2))
         data = {
             'RegistrationNumber' : registrationNumber,
             'Chasis Number' : chasisNumber,
@@ -126,10 +140,11 @@ def home():
             'Name' : name,
             'FuelType' : fuel,
             'OsNo' : osNo,
-            'Model' : model
+            'Model' : result2['data']['model'],
+            'Make' : result2['data']['make'],
+            'Version' : result2['data']['version']
+
         }
-        print(text)       
-        
         return jsonify({'data': data})
 
 
