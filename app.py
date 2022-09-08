@@ -45,6 +45,8 @@ def home():
             if startpoint2 == 7:
                 return '',registrationdate
             return chasisnum, registrationdate
+        
+        
         def getEngineNo(text):
             startpoint = text.find('ENO') + 6
             #endpoint = text.find('\n', startpoint)
@@ -63,6 +65,8 @@ def home():
                     counter+=1
                 
             return engineNo
+
+
         def getManufactureDate(text):
             test = text.upper()
             manufactureDate = ['MFG.DT','MFGO','MFGD','MFG.','MFG']
@@ -74,17 +78,24 @@ def home():
                     break
             startpoint = startpoint + 10
             return text[startpoint : startpoint+ 7]
+        
         def getName(text):
             startpoint = text.find('NAME') + 6
             endpoint = text.find('\n', startpoint)
             return text[startpoint:endpoint]
+        
         def getFuelType(text):
             startpoint = text.find('FUEL') + 7
             return text[startpoint : startpoint + 7].replace(" ","")
+        
         def getSNo(text):
             startpoint = text.find('OSNO') + 7
             return text[startpoint : startpoint+2].replace(" ","");
+        def getModel(text):
+            startpoint = text.find('MODEL') + 10
+            endpoint =text.find('\n', startpoint)
 
+            return text[startpoint : endpoint ]
 
         myconfig = r'--psm 4 --oem 3'
         #image reading
@@ -105,6 +116,7 @@ def home():
         name = getName(text)
         fuel = getFuelType(text)
         osNo = getSNo(text)
+        model = getModel(text)
         data = {
             'RegistrationNumber' : registrationNumber,
             'Chasis Number' : chasisNumber,
@@ -113,7 +125,8 @@ def home():
             'ManufactureDate' : manufactureDate,
             'Name' : name,
             'FuelType' : fuel,
-            'OsNo' : osNo
+            'OsNo' : osNo,
+            'Model' : model
         }
         print(text)       
         
