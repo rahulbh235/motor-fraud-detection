@@ -1,0 +1,1 @@
+web: gunciorn imagetotext:app
